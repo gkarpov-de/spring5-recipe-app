@@ -22,5 +22,5 @@ public class Ingredient {
 
     // EAGER is by default, however let's show the intent
     @OneToOne(fetch = FetchType.EAGER)
-    private UnitOfMesure uom;
+    private UnitOfMeasure uom;
 }
