@@ -1,0 +1,90 @@
+package spring.spring5recipeapp;
+
+import lombok.extern.log4j.Log4j2;
+import org.springframework.context.ApplicationListener;
+import org.springframework.context.event.ContextRefreshedEvent;
+import org.springframework.stereotype.Component;
+import spring.spring5recipeapp.domain.Difficulty;
+import spring.spring5recipeapp.domain.Ingredient;
+import spring.spring5recipeapp.domain.Recipe;
+import spring.spring5recipeapp.domain.UnitOfMeasure;
+import spring.spring5recipeapp.repositories.CategoryRepository;
+import spring.spring5recipeapp.repositories.RecipeRepository;
+import spring.spring5recipeapp.repositories.UnitOfMeasureRepository;
+
+import javax.transaction.Transactional;
+import java.math.BigDecimal;
+import java.util.*;
+
+@Log4j2
+@Component
+public class RecipeBootstrap implements ApplicationListener<ContextRefreshedEvent> {
+    RecipeRepository recipeRepository;
+    CategoryRepository categoryRepository;
+    UnitOfMeasureRepository unitOfMeasureRepository;
+
+    public RecipeBootstrap(RecipeRepository recipeRepository, CategoryRepository categoryRepository, UnitOfMeasureRepository unitOfMeasureRepository) {
+        this.recipeRepository = recipeRepository;
+        this.categoryRepository = categoryRepository;
+        this.unitOfMeasureRepository = unitOfMeasureRepository;
+    }
+
+    private List<Recipe> getRecipes() {
+        List<Recipe> recipes = new ArrayList<>();
+        Map<String, UnitOfMeasure> uoms = getUoms();
+        Recipe recipe1 = new Recipe();
+        var catItalian = categoryRepository.findByDescription("Italian").get();
+        recipe1.getCategories().add(catItalian);
+        recipe1.setCookTime(1);
+        recipe1.setPrepTime(2);
+        recipe1.setDescription("Perfect Guacamole");
+        recipe1.setDifficulty(Difficulty.MODERATE);
+        recipe1.setDirections("Cut the avocado, remove flesh\nCut the avocado, remove flesh\nCut the avocados in half. Remove the pit. Score the inside of the avocado with a blunt knife and scoop out the flesh with a spoon. (See How to Cut and Peel an Avocado.) Place in a bowl.\n2. Mash with a fork\nUsing a fork, roughly mash the avocado. (Don't overdo it! The guacamole should be a little chunky.)\n3. Add salt, lime juice, and the rest\nSprinkle with salt and lime (or lemon) juice. The acid in the lime juice will provide some balance to the richness of the avocado and will help delay the avocados from turning brown. Add the chopped onion, cilantro, black pepper, and chiles. Chili peppers vary individually in their hotness. So, start with a half of one chili pepper and add to the guacamole to your desired degree of hotness. Remember that much of this is done to taste because of the variability in the fresh ingredients. Start with this recipe and adjust to your taste. Chilling tomatoes hurts their flavor, so if you want to add chopped tomato to your guacamole, add it just before serving.\n4. Serve\nServe immediately, or if making a few hours ahead, place plastic wrap on the surface of the guacamole and press down to cover it and to prevent air reaching it. (The oxygen in the air causes oxidation which will turn the guacamole brown.) Refrigerate until ready to serve.");
+        recipe1.addIngredient(new Ingredient("ripe avocados", new BigDecimal(2), uoms.get("Each")));
+        recipe1.addIngredient(new Ingredient("salt", new BigDecimal("0.25"), uoms.get("Teaspoon")));
+        recipe1.addIngredient(new Ingredient("fresh lime juice or lemon juice", new BigDecimal(1), uoms.get("Tablespoon")));
+        recipe1.addIngredient(new Ingredient("minced red onion or thinly sliced green onion", new BigDecimal(2), uoms.get("Tablespoon")));
+        recipe1.addIngredient(new Ingredient("serrano chiles, stems and seeds removed, minced", new BigDecimal(1), uoms.get("Each")));
+        recipe1.addIngredient(new Ingredient("cilantro (leaves and tender stems), finely chopped", new BigDecimal(2), uoms.get("Tablespoon")));
+        recipe1.addIngredient(new Ingredient("freshly grated black pepper", new BigDecimal(1), uoms.get("Dash")));
+        recipe1.addIngredient(new Ingredient("ripe tomato, seeds and pulp removed, chopped", new BigDecimal("0.5"), uoms.get("Each")));
+        recipes.add(recipe1);
+        Recipe recipe2 = new Recipe();
+        var catMexican = categoryRepository.findByDescription("Mexican").get();
+        recipe2.getCategories().add(catMexican);
+        recipe2.setCookTime(1);
+        recipe2.setPrepTime(2);
+        recipe2.setDescription("Spicy Grilled Chicken Tacos");
+        recipe2.setDifficulty(Difficulty.HARD);
+        recipe2.setDirections("X3 4To");
+        recipes.add(recipe2);
+
+        return recipes;
+    }
+
+    private Map<String, UnitOfMeasure> getUoms() {
+        List<String> uomDescriptions = List.of("Teaspoon", "Tablespoon", "Cup", "Pinch", "Pint", "Ounce", "Dash", "Each");
+        Map<String, UnitOfMeasure> uoms = new HashMap<>();
+
+        for (String uomDescription : uomDescriptions) {
+            uoms.put(uomDescription, getUomByDescription(uomDescription));
+        }
+
+        return uoms;
+    }
+
+    private UnitOfMeasure getUomByDescription(String uomDescription) {
+        Optional<UnitOfMeasure> unitOfMeasureOptional = unitOfMeasureRepository.findByDescription(uomDescription);
+        if(unitOfMeasureOptional.isEmpty()) {
+            throw new RuntimeException("Expected UOM not found");
+        }
+        return unitOfMeasureOptional.get();
+    }
+
+    @Override
+//    @Transactional
+    public void onApplicationEvent(ContextRefreshedEvent contextRefreshedEvent) {
+        recipeRepository.saveAll(getRecipes());
+        log.debug("Loading Bootstrap Data");
+    }
+}
