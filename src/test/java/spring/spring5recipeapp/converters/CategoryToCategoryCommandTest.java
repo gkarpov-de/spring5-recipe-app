@@ -9,8 +9,8 @@ import spring.spring5recipeapp.domain.Category;
 import static org.junit.jupiter.api.Assertions.*;
 
 public class CategoryToCategoryCommandTest {
-    public static final Long ID_VALUE = 1L;
-    public static final String DESCRIPTION = "abrakadabra";
+    private static final Long ID_VALUE = 1L;
+    private static final String DESCRIPTION = "abrakadabra";
 
     CategoryToCategoryCommand converter;
 
@@ -34,11 +34,11 @@ public class CategoryToCategoryCommandTest {
     @Test
     @DisplayName("test conversion")
     void testConversion() {
-        Category category = new Category();
+        final Category category = new Category();
         category.setId(ID_VALUE);
         category.setDescription(DESCRIPTION);
 
-        CategoryCommand categoryCommand = converter.convert(category);
+        final CategoryCommand categoryCommand = converter.convert(category);
 
         assertNotNull(categoryCommand);
         assertEquals(ID_VALUE, categoryCommand.getId());

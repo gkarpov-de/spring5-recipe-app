@@ -9,8 +9,8 @@ import spring.spring5recipeapp.domain.UnitOfMeasure;
 import static org.junit.jupiter.api.Assertions.*;
 
 public class UnitOfMeasureCommandToUnitOfMeasureTest {
-    public static final Long ID_VALUE = 1L;
-    public static final String DESCRIPTION = "abrakadabra";
+    private static final Long ID_VALUE = 1L;
+    private static final String DESCRIPTION = "abrakadabra";
 
     UnitOfMeasureCommandToUnitOfMeasure converter;
 
@@ -34,11 +34,11 @@ public class UnitOfMeasureCommandToUnitOfMeasureTest {
     @Test
     @DisplayName("test conversion")
     void testConversion() {
-        UnitOfMeasureCommand unitOfMeasureCommand = new UnitOfMeasureCommand();
+        final UnitOfMeasureCommand unitOfMeasureCommand = new UnitOfMeasureCommand();
         unitOfMeasureCommand.setId(ID_VALUE);
         unitOfMeasureCommand.setDescription(DESCRIPTION);
 
-        UnitOfMeasure unitOfMeasure = converter.convert(unitOfMeasureCommand);
+        final UnitOfMeasure unitOfMeasure = converter.convert(unitOfMeasureCommand);
 
         assertNotNull(unitOfMeasure);
         assertEquals(ID_VALUE, unitOfMeasure.getId());

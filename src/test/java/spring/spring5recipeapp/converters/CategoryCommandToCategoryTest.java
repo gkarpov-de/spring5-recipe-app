@@ -9,8 +9,8 @@ import spring.spring5recipeapp.domain.Category;
 import static org.junit.jupiter.api.Assertions.*;
 
 public class CategoryCommandToCategoryTest {
-    public static final Long ID_VALUE = 1L;
-    public static final String DESCRIPTION = "abrakadabra";
+    private static final Long ID_VALUE = 1L;
+    private static final String DESCRIPTION = "abrakadabra";
 
     CategoryCommandToCategory converter;
 

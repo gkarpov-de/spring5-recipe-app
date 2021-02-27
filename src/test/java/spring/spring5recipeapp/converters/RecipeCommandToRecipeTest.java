@@ -12,20 +12,20 @@ import spring.spring5recipeapp.domain.Recipe;
 import static org.junit.jupiter.api.Assertions.*;
 
 public class RecipeCommandToRecipeTest {
-    public static final Long RECIPE_ID = 1L;
-    public static final Integer COOK_TIME = 1;
-    public static final Integer PREP_TIME = 2;
-    public static final String DESCRIPTION = "My Recipe";
-    public static final String DIRECTIONS = "Directions";
-    public static final Difficulty DIFFICULTY = Difficulty.EASY;
-    public static final Integer SERVINGS = 3;
-    public static final String SOURCE = "Source";
-    public static final String URL = "Some URL";
-    public static final Long CAT_ID1 = 2L;
-    public static final Long CAT_ID2 = 3L;
-    public static final Long INGREDIENT_ID1 = 4L;
-    public static final Long INGREDIENT_ID2 = 5L;
-    public static final Long NOTES_ID = 6L;
+    private static final Long RECIPE_ID = 1L;
+    private static final Integer COOK_TIME = 1;
+    private static final Integer PREP_TIME = 2;
+    private static final String DESCRIPTION = "My Recipe";
+    private static final String DIRECTIONS = "Directions";
+    private static final Difficulty DIFFICULTY = Difficulty.EASY;
+    private static final Integer SERVINGS = 3;
+    private static final String SOURCE = "Source";
+    private static final String URL = "Some URL";
+    private static final Long CAT_ID1 = 2L;
+    private static final Long CAT_ID2 = 3L;
+    private static final Long INGREDIENT_ID1 = 4L;
+    private static final Long INGREDIENT_ID2 = 5L;
+    private static final Long NOTES_ID = 6L;
 
     RecipeCommandToRecipe converter;
 

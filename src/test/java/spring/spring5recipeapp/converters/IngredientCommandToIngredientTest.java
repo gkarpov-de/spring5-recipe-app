@@ -12,11 +12,11 @@ import java.math.BigDecimal;
 import static org.junit.jupiter.api.Assertions.*;
 
 public class IngredientCommandToIngredientTest {
-    public static final Recipe RECIPE = new Recipe();
-    public static final BigDecimal AMOUNT = new BigDecimal("1");
-    public static final String DESCRIPTION = "Cheeseburger";
-    public static final Long ID_VALUE = 1L;
-    public static final Long UOM_ID = 2L;
+    private static final Recipe RECIPE = new Recipe();
+    private static final BigDecimal AMOUNT = new BigDecimal("1");
+    private static final String DESCRIPTION = "Cheeseburger";
+    private static final Long ID_VALUE = 1L;
+    private static final Long UOM_ID = 2L;
 
     IngredientCommandToIngredient converter;
 
@@ -38,16 +38,16 @@ public class IngredientCommandToIngredientTest {
     @Test
     public void convert() throws Exception {
         //given
-        IngredientCommand command = new IngredientCommand();
+        final IngredientCommand command = new IngredientCommand();
         command.setId(ID_VALUE);
         command.setAmount(AMOUNT);
         command.setDescription(DESCRIPTION);
-        UnitOfMeasureCommand unitOfMeasureCommand = new UnitOfMeasureCommand();
+        final UnitOfMeasureCommand unitOfMeasureCommand = new UnitOfMeasureCommand();
         unitOfMeasureCommand.setId(UOM_ID);
         command.setUnitOfMeasureCommand(unitOfMeasureCommand);
 
         //when
-        Ingredient ingredient = converter.convert(command);
+        final Ingredient ingredient = converter.convert(command);
 
         //then
         assertNotNull(ingredient);
@@ -61,15 +61,15 @@ public class IngredientCommandToIngredientTest {
     @Test
     public void convertWithNullUOM() throws Exception {
         //given
-        IngredientCommand command = new IngredientCommand();
+        final IngredientCommand command = new IngredientCommand();
         command.setId(ID_VALUE);
         command.setAmount(AMOUNT);
         command.setDescription(DESCRIPTION);
-        UnitOfMeasureCommand unitOfMeasureCommand = new UnitOfMeasureCommand();
+        final UnitOfMeasureCommand unitOfMeasureCommand = new UnitOfMeasureCommand();
 
 
         //when
-        Ingredient ingredient = converter.convert(command);
+        final Ingredient ingredient = converter.convert(command);
 
         //then
         assertNotNull(ingredient);

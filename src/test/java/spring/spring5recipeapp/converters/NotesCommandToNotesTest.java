@@ -9,8 +9,8 @@ import spring.spring5recipeapp.domain.Notes;
 import static org.junit.jupiter.api.Assertions.*;
 
 public class NotesCommandToNotesTest {
-    public static final Long ID_VALUE = 1L;
-    public static final String RECIPE_NOTES = "abrakadabra";
+    private static final Long ID_VALUE = 1L;
+    private static final String RECIPE_NOTES = "abrakadabra";
 
     NotesCommandToNotes converter;
 

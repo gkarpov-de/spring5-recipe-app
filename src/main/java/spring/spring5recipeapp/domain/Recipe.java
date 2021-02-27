@@ -20,7 +20,7 @@ public class Recipe {
     private String url;
     @Lob
     private String directions;
-    @OneToMany(cascade = CascadeType.ALL, mappedBy = "recipe", fetch = FetchType.EAGER)
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "recipe") //, fetch = FetchType.EAGER)
     private Set<Ingredient> ingredients = new HashSet<>();
     @Lob
     private Byte[] image;
@@ -28,7 +28,7 @@ public class Recipe {
     private Difficulty difficulty;
     @OneToOne(cascade = CascadeType.ALL)
     private Notes notes;
-    @ManyToMany(fetch = FetchType.EAGER)
+    @ManyToMany
     @JoinTable(name = "recipe_category",
             joinColumns = @JoinColumn(name = "recipe_id"),
             inverseJoinColumns = @JoinColumn(name = "category_id"))

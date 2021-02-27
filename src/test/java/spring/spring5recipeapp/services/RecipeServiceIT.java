@@ -10,11 +10,13 @@ import spring.spring5recipeapp.converters.RecipeToRecipeCommand;
 import spring.spring5recipeapp.domain.Recipe;
 import spring.spring5recipeapp.repositories.RecipeRepository;
 
+import javax.transaction.Transactional;
+
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 @SpringBootTest
 public class RecipeServiceIT {
-    public static final String NEW_DESCRIPTION = "New description";
+    private static final String NEW_DESCRIPTION = "New description";
 
     @Autowired
     RecipeService recipeService;
@@ -28,15 +30,16 @@ public class RecipeServiceIT {
     @Autowired
     RecipeToRecipeCommand recipeToRecipeCommand;
 
+    @Transactional
     @Test
     @DisplayName("test save of description")
     void testSaveOfDescription() {
-        Iterable<Recipe> recipes = recipeRepository.findAll();
-        Recipe testRecipe = recipes.iterator().next();
-        RecipeCommand testRecipeCommand = recipeToRecipeCommand.convert(testRecipe);
+        final Iterable<Recipe> recipes = recipeRepository.findAll();
+        final Recipe testRecipe = recipes.iterator().next();
+        final RecipeCommand testRecipeCommand = recipeToRecipeCommand.convert(testRecipe);
 
         testRecipeCommand.setDescription(NEW_DESCRIPTION);
-        RecipeCommand savedRecipeCommand = recipeService.saveRecipeCommand(testRecipeCommand);
+        final RecipeCommand savedRecipeCommand = recipeService.saveRecipeCommand(testRecipeCommand);
 
         assertEquals(NEW_DESCRIPTION, savedRecipeCommand.getDescription());
         assertEquals(testRecipe.getId(), savedRecipeCommand.getId());
