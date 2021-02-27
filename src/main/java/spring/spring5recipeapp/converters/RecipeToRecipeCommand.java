@@ -3,6 +3,7 @@ package spring.spring5recipeapp.converters;
 import lombok.Synchronized;
 import org.springframework.core.convert.converter.Converter;
 import org.springframework.lang.Nullable;
+import org.springframework.stereotype.Component;
 import spring.spring5recipeapp.commands.RecipeCommand;
 import spring.spring5recipeapp.domain.Category;
 import spring.spring5recipeapp.domain.Ingredient;
@@ -10,6 +11,7 @@ import spring.spring5recipeapp.domain.Recipe;
 
 import java.util.Set;
 
+@Component
 public class RecipeToRecipeCommand implements Converter<Recipe, RecipeCommand> {
 
     private final CategoryToCategoryCommand categoryConverter;

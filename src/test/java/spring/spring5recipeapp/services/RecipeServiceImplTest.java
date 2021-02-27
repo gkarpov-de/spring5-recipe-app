@@ -5,16 +5,17 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
-import org.mockito.stubbing.OngoingStubbing;
+import spring.spring5recipeapp.converters.RecipeCommandToRecipe;
+import spring.spring5recipeapp.converters.RecipeToRecipeCommand;
 import spring.spring5recipeapp.domain.Recipe;
 import spring.spring5recipeapp.repositories.RecipeRepository;
 
-import javax.swing.text.html.Option;
 import java.util.HashSet;
 import java.util.Optional;
 import java.util.Set;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.mockito.Mockito.*;
 
 class RecipeServiceImplTest {
@@ -23,22 +24,28 @@ class RecipeServiceImplTest {
     @Mock
     RecipeRepository recipeRepository;
 
+    @Mock
+    RecipeCommandToRecipe recipeCommandToRecipe;
+
+    @Mock
+    RecipeToRecipeCommand recipeToRecipeCommand;
+
     @BeforeEach
     void setUp() {
         MockitoAnnotations.openMocks(this);
-        recipeService = new RecipeServiceImpl(recipeRepository);
+        recipeService = new RecipeServiceImpl(recipeRepository, recipeCommandToRecipe, recipeToRecipeCommand);
     }
 
     @Test
     @DisplayName("getRecipes test")
     void getRecipesTest() {
-        Recipe recipe = new Recipe();
-        Set<Recipe> recipeData = new HashSet<>();
+        final Recipe recipe = new Recipe();
+        final Set<Recipe> recipeData = new HashSet<>();
         recipeData.add(recipe);
 
         when(recipeService.getRecipes()).thenReturn(recipeData);
 
-        Set<Recipe> recipeSet = recipeService.getRecipes();
+        final Set<Recipe> recipeSet = recipeService.getRecipes();
 
         assertEquals(1, recipeSet.size());
         verify(recipeRepository, times(1)).findAll();
@@ -48,14 +55,14 @@ class RecipeServiceImplTest {
     @Test
     @DisplayName("getRecipeByID test")
     void getRecipeByIdTest() {
-        Recipe recipe = new Recipe();
+        final Recipe recipe = new Recipe();
         recipe.setId(1L);
-        Optional<Recipe> recipeOptional = Optional.of(recipe);
-        
+        final Optional<Recipe> recipeOptional = Optional.of(recipe);
+
         when(recipeRepository.findById(anyLong())).thenReturn(recipeOptional);
 
-        Recipe recipeReturned = recipeService.findByID(1L);
-        assertNotNull(recipeReturned, "Nuul recipe returned");
+        final Recipe recipeReturned = recipeService.findByID(1L);
+        assertNotNull(recipeReturned, "Null recipe returned");
         verify(recipeRepository, times(1)).findById(anyLong());
         verify(recipeRepository, never()).findAll();
     }

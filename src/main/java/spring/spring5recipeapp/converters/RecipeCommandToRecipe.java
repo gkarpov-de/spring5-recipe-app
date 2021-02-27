@@ -3,9 +3,11 @@ package spring.spring5recipeapp.converters;
 import lombok.Synchronized;
 import org.springframework.core.convert.converter.Converter;
 import org.springframework.lang.Nullable;
+import org.springframework.stereotype.Component;
 import spring.spring5recipeapp.commands.RecipeCommand;
 import spring.spring5recipeapp.domain.Recipe;
 
+@Component
 public class RecipeCommandToRecipe implements Converter<RecipeCommand, Recipe> {
 
     private final CategoryCommandToCategory categoryConverter;
@@ -22,7 +24,7 @@ public class RecipeCommandToRecipe implements Converter<RecipeCommand, Recipe> {
     @Synchronized
     @Nullable
     @Override
-    public Recipe convert(final RecipeCommand source) {
+    public Recipe convert(@Nullable final RecipeCommand source) {
         if (source == null) {
             return null;
         }
