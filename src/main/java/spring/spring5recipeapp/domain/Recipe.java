@@ -1,8 +1,6 @@
 package spring.spring5recipeapp.domain;
 
 import lombok.Data;
-import lombok.Getter;
-import lombok.Setter;
 
 import javax.persistence.*;
 import java.util.HashSet;
@@ -23,7 +21,7 @@ public class Recipe {
     @Lob
     private String directions;
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "recipe")
-    private Set<Ingredient> ingredient = new HashSet<>();
+    private Set<Ingredient> ingredients = new HashSet<>();
     @Lob
     private Byte[] image;
     @Enumerated(value = EnumType.STRING)
@@ -43,7 +41,7 @@ public class Recipe {
 
     public Recipe addIngredient(Ingredient ingredient) {
         ingredient.setRecipe(this);
-        this.ingredient.add(ingredient);
+        this.ingredients.add(ingredient);
         return this;
     }
 }

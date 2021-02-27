@@ -4,10 +4,7 @@ import lombok.extern.log4j.Log4j2;
 import org.springframework.context.ApplicationListener;
 import org.springframework.context.event.ContextRefreshedEvent;
 import org.springframework.stereotype.Component;
-import spring.spring5recipeapp.domain.Difficulty;
-import spring.spring5recipeapp.domain.Ingredient;
-import spring.spring5recipeapp.domain.Recipe;
-import spring.spring5recipeapp.domain.UnitOfMeasure;
+import spring.spring5recipeapp.domain.*;
 import spring.spring5recipeapp.repositories.CategoryRepository;
 import spring.spring5recipeapp.repositories.RecipeRepository;
 import spring.spring5recipeapp.repositories.UnitOfMeasureRepository;
@@ -34,7 +31,11 @@ public class RecipeBootstrap implements ApplicationListener<ContextRefreshedEven
         Map<String, UnitOfMeasure> uoms = getUoms();
         Recipe recipe1 = new Recipe();
         var catItalian = categoryRepository.findByDescription("Italian").get();
+        var catMexican = categoryRepository.findByDescription("Mexican").get();
+
         recipe1.getCategories().add(catItalian);
+        recipe1.getCategories().add(catMexican);
+
         recipe1.setCookTime(1);
         recipe1.setPrepTime(2);
         recipe1.setDescription("Perfect Guacamole");
@@ -44,19 +45,23 @@ public class RecipeBootstrap implements ApplicationListener<ContextRefreshedEven
         recipe1.addIngredient(new Ingredient("salt", new BigDecimal("0.25"), uoms.get("Teaspoon")));
         recipe1.addIngredient(new Ingredient("fresh lime juice or lemon juice", new BigDecimal(1), uoms.get("Tablespoon")));
         recipe1.addIngredient(new Ingredient("minced red onion or thinly sliced green onion", new BigDecimal(2), uoms.get("Tablespoon")));
-        recipe1.addIngredient(new Ingredient("serrano chiles, stems and seeds removed, minced", new BigDecimal(1), uoms.get("Each")));
+        recipe1.addIngredient(new Ingredient("serrano chilies, stems and seeds removed, minced", new BigDecimal(1), uoms.get("Each")));
         recipe1.addIngredient(new Ingredient("cilantro (leaves and tender stems), finely chopped", new BigDecimal(2), uoms.get("Tablespoon")));
         recipe1.addIngredient(new Ingredient("freshly grated black pepper", new BigDecimal(1), uoms.get("Dash")));
         recipe1.addIngredient(new Ingredient("ripe tomato, seeds and pulp removed, chopped", new BigDecimal("0.5"), uoms.get("Each")));
+        recipe1.setServings(3);
+        recipe1.setUrl("https://www.simplyrecipes.com/recipes/perfect_guacamole/");
+        recipe1.setSource("Simply recipes");
+        recipe1.setNotes(new Notes(recipe1,"peace of cake"));
         recipes.add(recipe1);
         Recipe recipe2 = new Recipe();
-        var catMexican = categoryRepository.findByDescription("Mexican").get();
         recipe2.getCategories().add(catMexican);
         recipe2.setCookTime(1);
         recipe2.setPrepTime(2);
         recipe2.setDescription("Spicy Grilled Chicken Tacos");
         recipe2.setDifficulty(Difficulty.HARD);
         recipe2.setDirections("X3 4To");
+        recipe2.setNotes(new Notes(recipe2,"peace of cake2"));
         recipes.add(recipe2);
 
         return recipes;

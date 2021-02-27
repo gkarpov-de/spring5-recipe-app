@@ -6,11 +6,12 @@ import spring.spring5recipeapp.domain.Recipe;
 import spring.spring5recipeapp.repositories.RecipeRepository;
 
 import java.util.HashSet;
+import java.util.Optional;
 import java.util.Set;
 
 @Log4j2
 @Service
-public class RecipeServiceImpl implements RecipeService{
+public class RecipeServiceImpl implements RecipeService {
     private final RecipeRepository recipeRepository;
 
     public RecipeServiceImpl(RecipeRepository recipeRepository) {
@@ -19,9 +20,19 @@ public class RecipeServiceImpl implements RecipeService{
 
     @Override
     public Set<Recipe> getRecipes() {
-        log.debug("Running getRecipe");
+        log.debug("Executing getRecipe");
         Set<Recipe> recipeSet = new HashSet<>();
         recipeRepository.findAll().iterator().forEachRemaining(recipeSet::add);
         return recipeSet;
+    }
+
+    @Override
+    public Recipe findByID(long l) {
+        log.debug("Executing findByID({})", l);
+        Optional<Recipe> recipeOptional = recipeRepository.findById(l);
+        if (!recipeOptional.isPresent()) {
+            throw new RuntimeException("Recipe with id:" + l + " not found!");
+        }
+        return recipeOptional.get();
     }
 }

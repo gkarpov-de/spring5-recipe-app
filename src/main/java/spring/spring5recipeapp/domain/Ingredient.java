@@ -1,9 +1,6 @@
 package spring.spring5recipeapp.domain;
 
-import lombok.Data;
-import lombok.EqualsAndHashCode;
-import lombok.Getter;
-import lombok.Setter;
+import lombok.*;
 
 import javax.persistence.*;
 import java.math.BigDecimal;
@@ -21,6 +18,7 @@ public class Ingredient {
     @OneToOne(fetch = FetchType.EAGER)
     private UnitOfMeasure uom;
     @ManyToOne
+    @ToString.Exclude
     private Recipe recipe;
 
     public Ingredient() {
@@ -31,4 +29,6 @@ public class Ingredient {
         this.amount = amount;
         this.uom = uom;
     }
+
+
 }
