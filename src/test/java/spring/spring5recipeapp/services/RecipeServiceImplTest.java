@@ -19,6 +19,8 @@ import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.mockito.Mockito.*;
 
 class RecipeServiceImplTest {
+    private static final Long ID_VALUE = 1L;
+
     RecipeService recipeService;
 
     @Mock
@@ -34,6 +36,21 @@ class RecipeServiceImplTest {
     void setUp() {
         MockitoAnnotations.openMocks(this);
         recipeService = new RecipeServiceImpl(recipeRepository, recipeCommandToRecipe, recipeToRecipeCommand);
+    }
+
+    @Test
+    @DisplayName("getRecipeByID test")
+    void getRecipeByIdTest() {
+        final Recipe recipe = new Recipe();
+        recipe.setId(ID_VALUE);
+        final Optional<Recipe> recipeOptional = Optional.of(recipe);
+
+        when(recipeRepository.findById(anyLong())).thenReturn(recipeOptional);
+
+        final Recipe recipeReturned = recipeService.findByID(ID_VALUE);
+        assertNotNull(recipeReturned, "Null recipe returned");
+        verify(recipeRepository, times(1)).findById(anyLong());
+        verify(recipeRepository, never()).findAll();
     }
 
     @Test
@@ -53,17 +70,10 @@ class RecipeServiceImplTest {
     }
 
     @Test
-    @DisplayName("getRecipeByID test")
-    void getRecipeByIdTest() {
-        final Recipe recipe = new Recipe();
-        recipe.setId(1L);
-        final Optional<Recipe> recipeOptional = Optional.of(recipe);
+    @DisplayName("test delete recipe by id")
+    void testDeleteRecipeById() {
+        recipeService.deleteById(ID_VALUE);
 
-        when(recipeRepository.findById(anyLong())).thenReturn(recipeOptional);
-
-        final Recipe recipeReturned = recipeService.findByID(1L);
-        assertNotNull(recipeReturned, "Null recipe returned");
-        verify(recipeRepository, times(1)).findById(anyLong());
-        verify(recipeRepository, never()).findAll();
+        verify(recipeRepository, times(1)).deleteById(anyLong());
     }
 }
