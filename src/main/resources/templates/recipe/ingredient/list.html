@@ -3,7 +3,7 @@
 
 <head>
     <meta charset="UTF-8">
-    <title>Recipe Home</title>
+    <title>Ingredient List</title>
 
     <link href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" rel="stylesheet"
           th:href="@{/webjars/bootstrap/3.3.7/css/bootstrap.min.css}">
@@ -54,14 +54,15 @@
                                     Description
                                 </td>
                                 <td><a href="#"
-                                       th:href="@{'recipe/' + ${recipe.id} + '/ingredient/' + ${ingredient.id} + '/show'}">View</a>
+                                       th:href="@{'/recipe/' + ${recipe.id} + '/ingredient/' + ${ingredient.id} + '/show'}">View</a>
                                 </td>
                                 <td><a href="#"
-                                       th:href="@{'recipe/' + ${recipe.id} + '/ingredient/' + ${ingredient.id} + '/update'}">Update</a>
+                                       th:href="@{'/recipe/' + ${recipe.id} + '/ingredient/' + ${ingredient.id} + '/update'}">Update</a>
                                 </td>
                                 <td><a href="#"
-                                       th:href="@{'recipe/' + ${recipe.id} + '/ingredient/' + ${ingredient.id} + '/delete'}">Delete</a>
+                                       th:href="@{'/recipe/' + ${recipe.id} + '/ingredient/' + ${ingredient.id} + '/delete'}">Delete</a>
                                 </td>
+
                             </tr>
                         </table>
                     </div>

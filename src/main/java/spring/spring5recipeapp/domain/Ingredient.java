@@ -1,6 +1,8 @@
 package spring.spring5recipeapp.domain;
 
-import lombok.*;
+import lombok.Data;
+import lombok.EqualsAndHashCode;
+import lombok.ToString;
 
 import javax.persistence.*;
 import java.math.BigDecimal;
@@ -24,7 +26,7 @@ public class Ingredient {
     public Ingredient() {
     }
 
-    public Ingredient(String description, BigDecimal amount, UnitOfMeasure uom) {
+    public Ingredient(final String description, final BigDecimal amount, final UnitOfMeasure uom) {
         this.description = description;
         this.amount = amount;
         this.uom = uom;
