@@ -5,6 +5,7 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
+import spring.spring5recipeapp.commands.RecipeCommand;
 import spring.spring5recipeapp.converters.RecipeCommandToRecipe;
 import spring.spring5recipeapp.converters.RecipeToRecipeCommand;
 import spring.spring5recipeapp.domain.Recipe;
@@ -47,8 +48,28 @@ class RecipeServiceImplTest {
 
         when(recipeRepository.findById(anyLong())).thenReturn(recipeOptional);
 
-        final Recipe recipeReturned = recipeService.findByID(ID_VALUE);
+        final Recipe recipeReturned = recipeService.findById(ID_VALUE);
         assertNotNull(recipeReturned, "Null recipe returned");
+        verify(recipeRepository, times(1)).findById(anyLong());
+        verify(recipeRepository, never()).findAll();
+    }
+
+    @Test
+    public void getRecipeCommandByIdTest() {
+        final Recipe recipe = new Recipe();
+        recipe.setId(1L);
+        final Optional<Recipe> recipeOptional = Optional.of(recipe);
+
+        when(recipeRepository.findById(anyLong())).thenReturn(recipeOptional);
+
+        final RecipeCommand recipeCommand = new RecipeCommand();
+        recipeCommand.setId(1L);
+
+        when(recipeToRecipeCommand.convert(any())).thenReturn(recipeCommand);
+
+        final RecipeCommand commandById = recipeService.findCommandById(1L);
+
+        assertNotNull(commandById, "Null recipe returned");
         verify(recipeRepository, times(1)).findById(anyLong());
         verify(recipeRepository, never()).findAll();
     }

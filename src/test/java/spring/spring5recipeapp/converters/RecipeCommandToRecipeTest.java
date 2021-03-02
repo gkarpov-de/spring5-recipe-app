@@ -17,7 +17,7 @@ public class RecipeCommandToRecipeTest {
     private static final Integer PREP_TIME = 2;
     private static final String DESCRIPTION = "My Recipe";
     private static final String DIRECTIONS = "Directions";
-    private static final Difficulty DIFFICULTY = Difficulty.EASY;
+    private static final Difficulty DIFFICULTY = Difficulty.Easy;
     private static final Integer SERVINGS = 3;
     private static final String SOURCE = "Source";
     private static final String URL = "Some URL";

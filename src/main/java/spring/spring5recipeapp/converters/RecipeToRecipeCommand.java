@@ -27,7 +27,7 @@ public class RecipeToRecipeCommand implements Converter<Recipe, RecipeCommand> {
     @Synchronized
     @Nullable
     @Override
-    public RecipeCommand convert(final Recipe recipe) {
+    public RecipeCommand convert(@Nullable final Recipe recipe) {
         if (recipe == null) {
             return null;
         }

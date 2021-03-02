@@ -1,8 +1,8 @@
 package spring.spring5recipeapp.converters;
 
-import com.sun.istack.Nullable;
 import lombok.Synchronized;
 import org.springframework.core.convert.converter.Converter;
+import org.springframework.lang.Nullable;
 import org.springframework.stereotype.Component;
 import spring.spring5recipeapp.commands.CategoryCommand;
 import spring.spring5recipeapp.domain.Category;
@@ -13,7 +13,7 @@ public class CategoryToCategoryCommand implements Converter<Category, CategoryCo
     @Synchronized
     @Nullable
     @Override
-    public CategoryCommand convert(final Category category) {
+    public CategoryCommand convert(@Nullable final Category category) {
         if (category == null) {
             return null;
         }

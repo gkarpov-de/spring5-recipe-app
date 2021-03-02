@@ -35,7 +35,7 @@ public class RecipeServiceImpl implements RecipeService {
     }
 
     @Override
-    public Recipe findByID(final Long l) {
+    public Recipe findById(final Long l) {
         log.debug("Executing findByID({})", l);
         final Optional<Recipe> recipeOptional = recipeRepository.findById(l);
         if (recipeOptional.isEmpty()) {
@@ -48,6 +48,10 @@ public class RecipeServiceImpl implements RecipeService {
     @Transactional
     public RecipeCommand saveRecipeCommand(final RecipeCommand command) {
         final Recipe detachedRecipe = recipeCommandToRecipe.convert(command);
+        if (detachedRecipe == null) {
+            throw new RuntimeException("RecipeCommand to Recipe conversion failed. Null returned"
+            );
+        }
         final Recipe savedRecipe = recipeRepository.save(detachedRecipe);
         log.debug("Saved Recipe id: {}", savedRecipe.getId());
         return recipeToRecipeCommand.convert(savedRecipe);
@@ -56,11 +60,17 @@ public class RecipeServiceImpl implements RecipeService {
     @Override
     @Transactional
     public RecipeCommand findCommandByID(final Long l) {
-        return recipeToRecipeCommand.convert(findByID(l));
+        return recipeToRecipeCommand.convert(findById(l));
     }
 
     @Override
     public void deleteById(final Long idValue) {
         recipeRepository.deleteById(idValue);
+    }
+
+    @Transactional
+    @Override
+    public RecipeCommand findCommandById(final Long l) {
+        return recipeToRecipeCommand.convert(findById(l));
     }
 }

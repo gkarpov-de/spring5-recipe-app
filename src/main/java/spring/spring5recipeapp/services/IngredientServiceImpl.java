@@ -12,14 +12,16 @@ import spring.spring5recipeapp.repositories.RecipeRepository;
 import spring.spring5recipeapp.repositories.UnitOfMeasureRepository;
 
 import java.util.Optional;
+import java.util.Set;
+import java.util.stream.Collectors;
 
 @Log4j2
 @Service
 public class IngredientServiceImpl implements IngredientService {
-    private RecipeRepository recipeRepository;
-    private IngredientToIngredientCommand ingredientToIngredientCommand;
-    private IngredientCommandToIngredient ingredientCommandToIngredient;
-    private UnitOfMeasureRepository unitOfMeasureRepository;
+    private final RecipeRepository recipeRepository;
+    private final IngredientToIngredientCommand ingredientToIngredientCommand;
+    private final IngredientCommandToIngredient ingredientCommandToIngredient;
+    private final UnitOfMeasureRepository unitOfMeasureRepository;
 
     public IngredientServiceImpl(final IngredientToIngredientCommand ingredientToIngredientCommand,
                                  final IngredientCommandToIngredient ingredientCommandToIngredient,
@@ -40,7 +42,7 @@ public class IngredientServiceImpl implements IngredientService {
 
         final Optional<IngredientCommand> ingredientCommandOptional = recipeOptional.get()
                 .getIngredients().stream().filter(ingredient -> ingredient.getId().equals(id))
-                .map(ingredient -> ingredientToIngredientCommand.convert(ingredient))
+                .map(ingredientToIngredientCommand::convert)
                 .findFirst();
 
         if (ingredientCommandOptional.isEmpty()) {
@@ -54,7 +56,9 @@ public class IngredientServiceImpl implements IngredientService {
     @Transactional
     public IngredientCommand saveIngredientCommand(final IngredientCommand ingredientCommand) {
         final Long recipeId = ingredientCommand.getRecipeId();
-        final Long ingredientCommandId = ingredientCommand.getId();
+        // FIXME
+        // could be null if new Ingredient
+        Long ingredientCommandId = ingredientCommand.getId();
         final Optional<Recipe> recipeOptional = recipeRepository.findById(recipeId);
 
         if (recipeOptional.isEmpty()) {
@@ -62,10 +66,12 @@ public class IngredientServiceImpl implements IngredientService {
             return new IngredientCommand();
         }
         final Recipe recipe = recipeOptional.get();
+        final Set<Long> setOfIngredientsIDsBeforeSaveRecipe = getSetOfIngredientsIDs(recipe);
 
+        final Long finalIngredientCommandId1 = ingredientCommandId;
         final Optional<Ingredient> optionalIngredient = recipe.getIngredients()
                 .stream()
-                .filter(ingredient -> ingredient.getId().equals(ingredientCommandId))
+                .filter(ingredient -> ingredient.getId().equals(finalIngredientCommandId1))
                 .findFirst();
 
         if (optionalIngredient.isPresent()) {
@@ -76,24 +82,41 @@ public class IngredientServiceImpl implements IngredientService {
                     .orElseThrow(() -> new RuntimeException("<DB Error> Uom not found."))); // TODO who/how will catch it?!
         } else {
             final Ingredient ingredient = ingredientCommandToIngredient.convert(ingredientCommand);
+            if (ingredient == null) {
+                throw new RuntimeException("IngredientCommand to Ingredient conversion failed. Null returned");
+            }
             ingredient.setRecipe(recipe);
             recipe.addIngredient(ingredient);
         }
 
-        final Recipe savedRecipe = recipeRepository.save(recipe);
 
+        final Recipe savedRecipe = recipeRepository.save(recipe);
+        if (ingredientCommandId == null) {
+            final Set<Long> setOfIngredientsIDsAfterSaveRecipe = getSetOfIngredientsIDs(recipe);
+            setOfIngredientsIDsAfterSaveRecipe.removeAll(setOfIngredientsIDsBeforeSaveRecipe);
+            ingredientCommandId = setOfIngredientsIDsAfterSaveRecipe.stream().findFirst().orElseThrow();
+        }
+
+        final Long finalIngredientCommandId = ingredientCommandId;
         final Ingredient savedIngredient = savedRecipe.getIngredients()
                 .stream()
-                .filter(recipeIngredients -> recipeIngredients.getId().equals(ingredientCommandId))
+                .filter(recipeIngredients -> recipeIngredients.getId().equals(finalIngredientCommandId))
                 .findFirst()
                 .orElseThrow(() -> new RuntimeException("<Server error> Could not save ingredient."));
 
         return ingredientToIngredientCommand.convert(savedIngredient);
     }
 
+    private Set<Long> getSetOfIngredientsIDs(final Recipe recipe) {
+        return recipe.getIngredients()
+                .stream()
+                .map(Ingredient::getId)
+                .collect(Collectors.toSet());
+    }
+
     @Override
     public void deleteById(final Long recipeId, final Long ingredientId) {
-        log.debug("Deleting ingredient id: {} from recipe id: {}");
+        log.debug("Deleting ingredient id: {} from recipe id: {}", ingredientId, recipeId);
         final Optional<Recipe> recipeOptional = recipeRepository.findById(recipeId);
 
         if (recipeOptional.isEmpty()) {

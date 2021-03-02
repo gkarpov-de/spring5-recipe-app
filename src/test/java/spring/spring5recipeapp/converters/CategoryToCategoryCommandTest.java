@@ -44,4 +44,6 @@ public class CategoryToCategoryCommandTest {
         assertEquals(ID_VALUE, categoryCommand.getId());
         assertEquals(DESCRIPTION, categoryCommand.getDescription());
     }
+
+
 }

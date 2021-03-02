@@ -1,8 +1,8 @@
 package spring.spring5recipeapp.converters;
 
-import com.sun.istack.Nullable;
 import lombok.Synchronized;
 import org.springframework.core.convert.converter.Converter;
+import org.springframework.lang.Nullable;
 import org.springframework.stereotype.Component;
 import spring.spring5recipeapp.commands.IngredientCommand;
 import spring.spring5recipeapp.domain.Ingredient;
@@ -18,7 +18,7 @@ public class IngredientToIngredientCommand implements Converter<Ingredient, Ingr
     @Synchronized
     @Nullable
     @Override
-    public IngredientCommand convert(final Ingredient ingredient) {
+    public IngredientCommand convert(@Nullable final Ingredient ingredient) {
         if (ingredient == null) {
             return null;
         }

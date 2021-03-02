@@ -24,14 +24,11 @@ import static org.mockito.Mockito.*;
 class IngredientServiceImplTest {
     private static final Long RECIPE_ID = 1L;
     private static final Long INGREDIENT_ID = 2L;
-
+    private final IngredientToIngredientCommand ingredientToIngredientCommand;
+    private final IngredientCommandToIngredient ingredientCommandToIngredient;
     @Mock
     private RecipeRepository recipeRepository;
     private IngredientService ingredientService;
-
-    private IngredientToIngredientCommand ingredientToIngredientCommand;
-    private IngredientCommandToIngredient ingredientCommandToIngredient;
-
     @Mock
     private UnitOfMeasureRepository unitOfMeasureRepository;
 
@@ -48,8 +45,12 @@ class IngredientServiceImplTest {
     }
 
     @Test
+    public void findByRecipeIdAndId() {
+    }
+
+    @Test
     @DisplayName("test find by recipe id and id")
-    void testFindByRecipeIdAndId() {
+    void testFindByRecipeIdAndIdHappyPath() {
         final Recipe recipe = new Recipe();
         recipe.setId(1L);
         final Ingredient ingredient1 = new Ingredient();
@@ -66,14 +67,15 @@ class IngredientServiceImplTest {
         when(recipeRepository.findById(anyLong())).thenReturn(optionalRecipe);
 
         final IngredientCommand ingredientCommand = ingredientService.findByRecipeIdAndIngredientId(1L, 2L);
+
         assertEquals(1L, ingredientCommand.getRecipeId());
         assertEquals(2L, ingredientCommand.getId());
         verify(recipeRepository, times(1)).findById(anyLong());
     }
 
     @Test
-    @DisplayName("test save IngredientCommand")
-    void testSaveIngredientCommand() {
+    @DisplayName("test save RecipeCommand")
+    void testSaveRecipeCommand() {
         // given
         final IngredientCommand ingredientCommand = new IngredientCommand();
         ingredientCommand.setRecipeId(RECIPE_ID);
