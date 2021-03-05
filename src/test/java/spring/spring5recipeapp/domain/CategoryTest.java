@@ -6,6 +6,7 @@ import org.junit.jupiter.api.Test;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 class CategoryTest {
+    public static final Long ID_VALUE = 1L;
     Category category;
 
     @BeforeEach
@@ -15,7 +16,7 @@ class CategoryTest {
 
     @Test
     void getId() {
-        final Long id = 1L;
+        final Long id = ID_VALUE;
         category.setId(id);
         assertEquals(id, category.getId());
     }

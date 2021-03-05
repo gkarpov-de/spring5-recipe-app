@@ -11,7 +11,7 @@
     <title>Recipe</title>
 </head>
 <body>
-<div class="container-fluid" style="margin-top: 20px">
+<div class="container-fluid">
     <div class="row">
         <div class="col-md-8 col-md-offset-2">
             <div class="panel-group">
@@ -73,7 +73,7 @@
                                 <h5>URL:</h5>
                             </div>
                             <div class="col-md-3">
-                                <a th:href="${recipe.url}">View Original</a>
+                                <a th:href="@{recipe.url}">View Original</a>
                             </div>
 
                         </div>
@@ -82,7 +82,17 @@
                 </div>
                 <div class="panel panel-primary ingredients-panel">
                     <div class="panel-heading">
-                        <h1 class="panel-title">Ingredients</h1>
+                        <div class="panel-heading">
+                            <div class="row">
+                                <div class="col-md-11">
+                                    <h1 class="panel-title">Ingredients</h1>
+                                </div>
+                                <div class="col-md-1">
+                                    <a class="btn btn-default" href="#"
+                                       role="button" th:href="@{'/recipe/' + ${recipe.id} + '/ingredients'}">View</a>
+                                </div>
+                            </div>
+                        </div>
                     </div>
                     <div class="panel-body">
                         <div class="row">

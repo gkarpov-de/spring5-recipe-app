@@ -7,11 +7,11 @@
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"
             th:src="@{/webjars/bootstrap/3.3.7/js/bootstrap.min.js}"></script>
-    <link href="/css/styles.css" rel="stylesheet" type="text/css">
+    <link href="/css/style.css" rel="stylesheet" type="text/css">
     <title>Recipe Form</title>
 </head>
 <body>
-<div class="container-fluid" style="margin-top: 20px">
+<div class="container-fluid">
     <div class="row">
         <div class="col-md-8 col-md-offset-2">
             <form method="post" th:action="@{/recipe/}" th:object="${recipe}">
@@ -19,7 +19,15 @@
                 <div class="panel-group">
                     <div class="panel panel-primary description-panel">
                         <div class="panel-heading">
-                            <h1 class="panel-title">Edit Recipe</h1>
+                            <div class="row">
+                                <div class="col-md-10">
+                                    <h1 class="panel-title">Edit Recipe</h1>
+                                </div>
+                                <div class="col-md-1">
+                                    <a class="btn btn-default" href="#"
+                                       role="button" th:href="@{'/recipe/' + ${recipe.id} + '/image'}">Change Image</a>
+                                </div>
+                            </div>
                         </div>
                         <div class="panel-body">
                             <div class="row">
@@ -32,7 +40,7 @@
                                 <div class="col-md-3">
                                     <label>Categories:</label>
                                 </div>
-                                <div class="col-md-9">
+                                <div class="col-md-3">
                                     <div class="radio">
                                         <label>
                                             <input type="checkbox" value=""/>
@@ -45,6 +53,8 @@
                                             Cat 2
                                         </label>
                                     </div>
+                                </div>
+                                <div class="col-md-11"><img alt="" src="/Images/red-cross.png">
                                 </div>
                             </div>
                             <div class="row">
@@ -96,7 +106,8 @@
                                     <h1 class="panel-title">Ingredients</h1>
                                 </div>
                                 <div class="col-md-1">
-                                    <a class="btn btn-default" href="#" role="button">Edit</a>
+                                    <a class="btn btn-default" href="#"
+                                       role="button" th:href="@{'/recipe/' + ${recipe.id} + '/ingredients'}">View</a>
                                 </div>
                             </div>
                         </div>
