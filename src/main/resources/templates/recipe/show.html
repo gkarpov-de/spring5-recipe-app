@@ -24,7 +24,7 @@
                             <div class="col-md-3">
                                 <h5>Categories:</h5>
                             </div>
-                            <div class="col-md-9">
+                            <div class="col-md-3">
                                 <ul>
                                     <li th:remove="all">cat 1</li>
                                     <li th:remove="all">cat 2</li>
@@ -32,6 +32,11 @@
                                         3
                                     </li>
                                 </ul>
+                            </div>
+                            <div class="col-md-6">
+                                <img height="200"
+                                     src="/images/red-cross.png"
+                                     th:src="@{'/recipe/' + ${recipe.id} + '/recipeimage'}" width="200">
                             </div>
                         </div>
                         <div class="row">
