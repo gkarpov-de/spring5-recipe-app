@@ -7,12 +7,16 @@ import lombok.extern.log4j.Log4j2;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
+
+import javax.validation.Valid;
 
 @Log4j2
 @Controller
 public class RecipeController {
+    public static final String RECIPE_RECIPEFORM_URL = "recipe/recipeform";
     RecipeService recipeService;
 
     public RecipeController(final RecipeService recipeService) {
@@ -29,18 +33,24 @@ public class RecipeController {
     public String newRecipe(final Model model) {
         model.addAttribute("recipe", new RecipeCommand());
 
-        return "recipe/recipeform";
+        return RECIPE_RECIPEFORM_URL;
     }
 
     @GetMapping("recipe/{id}/update")
     public String updateRecipe(@PathVariable final String id, final Model model) {
         model.addAttribute("recipe", recipeService.findCommandByID(Long.valueOf(id)));
 
-        return "recipe/recipeform";
+        return RECIPE_RECIPEFORM_URL;
     }
 
     @PostMapping("recipe")
-    public String saveOrUpdate(@ModelAttribute final RecipeCommand command) {
+    public String saveOrUpdate(@Valid @ModelAttribute("recipe") final RecipeCommand command, final BindingResult bindingResult) {
+        if (bindingResult.hasErrors()) {
+            bindingResult.getAllErrors().forEach(objectError -> log.debug(objectError));
+
+            return RECIPE_RECIPEFORM_URL;
+        }
+
         final RecipeCommand savedCommand = recipeService.saveRecipeCommand(command);
         return "redirect:/recipe/" + savedCommand.getId() + "/show";
     }
@@ -63,14 +73,4 @@ public class RecipeController {
         return modelAndView;
     }
 
-    @ResponseStatus(HttpStatus.BAD_REQUEST)
-    @ExceptionHandler(NumberFormatException.class)
-    public ModelAndView handleBadRequest(final Exception exception) {
-        log.error("Handling Number Format Exception");
-        log.error(exception.getMessage());
-        final ModelAndView modelAndView = new ModelAndView();
-        modelAndView.setViewName("400error");
-        modelAndView.addObject("exception", exception);
-        return modelAndView;
-    }
 }
