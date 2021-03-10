@@ -13,6 +13,7 @@ import org.springframework.web.servlet.ModelAndView;
 
 import javax.validation.Valid;
 
+
 @Log4j2
 @Controller
 public class RecipeController {
@@ -46,7 +47,7 @@ public class RecipeController {
     @PostMapping("recipe")
     public String saveOrUpdate(@Valid @ModelAttribute("recipe") final RecipeCommand command, final BindingResult bindingResult) {
         if (bindingResult.hasErrors()) {
-            bindingResult.getAllErrors().forEach(objectError -> log.debug(objectError));
+            bindingResult.getAllErrors().forEach(log::debug);
 
             return RECIPE_RECIPEFORM_URL;
         }
@@ -67,10 +68,10 @@ public class RecipeController {
     public ModelAndView handleNotFound(final Exception exception) {
         log.error("Handling Not Found Exception");
         log.error(exception.getMessage());
+
         final ModelAndView modelAndView = new ModelAndView();
         modelAndView.setViewName("404error");
         modelAndView.addObject("exception", exception);
         return modelAndView;
     }
-
 }
