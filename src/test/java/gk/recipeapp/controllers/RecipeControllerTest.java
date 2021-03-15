@@ -22,7 +22,7 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
 public class RecipeControllerTest {
-    public static final long RECIPE_ID = 1L;
+    public static final Long RECIPE_ID = 1L;
     private static final Long ID_VALUE = 1L;
     @Mock
     RecipeService recipeService;
@@ -77,8 +77,6 @@ public class RecipeControllerTest {
     @Test
     @DisplayName("test get new recipe form")
     void testGetNewRecipeForm() throws Exception {
-        final RecipeCommand recipeCommand = new RecipeCommand();
-
         mockMvc.perform(get("/recipe/new"))
                 .andExpect(status().isOk())
                 .andExpect(view().name(RECIPE_RECIPEFORM_URL))
