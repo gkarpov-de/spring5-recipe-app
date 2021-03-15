@@ -1,6 +1,7 @@
 package gk.recipeapp;
 
 import gk.recipeapp.domain.*;
+import gk.recipeapp.exceptions.NotFoundException;
 import gk.recipeapp.repositories.CategoryRepository;
 import gk.recipeapp.repositories.RecipeRepository;
 import gk.recipeapp.repositories.UnitOfMeasureRepository;
@@ -29,8 +30,8 @@ public class RecipeBootstrap implements ApplicationListener<ContextRefreshedEven
         final List<Recipe> recipes = new ArrayList<>();
         final Map<String, UnitOfMeasure> uoms = getUoms();
         final Recipe recipe1 = new Recipe();
-        final var catItalian = categoryRepository.findByDescription("Italian").orElseThrow();
-        final var catMexican = categoryRepository.findByDescription("Mexican").orElseThrow();
+        final Category catItalian = categoryRepository.findByDescription("Italian").orElseThrow(NotFoundException::new);
+        final Category catMexican = categoryRepository.findByDescription("Mexican").orElseThrow(NotFoundException::new);
 
         recipe1.getCategories().add(catItalian);
         recipe1.getCategories().add(catMexican);
@@ -67,7 +68,7 @@ public class RecipeBootstrap implements ApplicationListener<ContextRefreshedEven
     }
 
     private Map<String, UnitOfMeasure> getUoms() {
-        final List<String> uomDescriptions = List.of("Teaspoon", "Tablespoon", "Cup", "Pinch", "Pint", "Ounce", "Dash", "Each");
+        final String[] uomDescriptions = {"Teaspoon", "Tablespoon", "Cup", "Pinch", "Pint", "Ounce", "Dash", "Each"};
         final Map<String, UnitOfMeasure> uoms = new HashMap<>();
 
         for (final String uomDescription : uomDescriptions) {
@@ -79,7 +80,7 @@ public class RecipeBootstrap implements ApplicationListener<ContextRefreshedEven
 
     private UnitOfMeasure getUomByDescription(final String uomDescription) {
         final Optional<UnitOfMeasure> unitOfMeasureOptional = unitOfMeasureRepository.findByDescription(uomDescription);
-        if (unitOfMeasureOptional.isEmpty()) {
+        if (!unitOfMeasureOptional.isPresent()) {
             throw new RuntimeException("Expected UOM not found");
         }
         return unitOfMeasureOptional.get();

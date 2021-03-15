@@ -5,6 +5,7 @@ import gk.recipeapp.converters.IngredientCommandToIngredient;
 import gk.recipeapp.converters.IngredientToIngredientCommand;
 import gk.recipeapp.domain.Ingredient;
 import gk.recipeapp.domain.Recipe;
+import gk.recipeapp.exceptions.NotFoundException;
 import gk.recipeapp.repositories.RecipeRepository;
 import gk.recipeapp.repositories.UnitOfMeasureRepository;
 import lombok.extern.log4j.Log4j2;
@@ -36,7 +37,7 @@ public class IngredientServiceImpl implements IngredientService {
     @Override
     public IngredientCommand findByRecipeIdAndIngredientId(final Long recipeId, final Long id) {
         final Optional<Recipe> recipeOptional = recipeRepository.findById(recipeId);
-        if (recipeOptional.isEmpty()) {
+        if (!recipeOptional.isPresent()) {
             throw new RuntimeException("Recipe with id: " + recipeId + "not found");
         }
 
@@ -45,7 +46,7 @@ public class IngredientServiceImpl implements IngredientService {
                 .map(ingredientToIngredientCommand::convert)
                 .findFirst();
 
-        if (ingredientCommandOptional.isEmpty()) {
+        if (!ingredientCommandOptional.isPresent()) {
             throw new RuntimeException("Ingredient with id: " + id + "not found");
         }
 
@@ -61,7 +62,7 @@ public class IngredientServiceImpl implements IngredientService {
         Long ingredientCommandId = ingredientCommand.getId();
         final Optional<Recipe> recipeOptional = recipeRepository.findById(recipeId);
 
-        if (recipeOptional.isEmpty()) {
+        if (!recipeOptional.isPresent()) {
             log.debug("Recipe with id: {} not found.", recipeId);
             return new IngredientCommand();
         }
@@ -94,7 +95,7 @@ public class IngredientServiceImpl implements IngredientService {
         if (ingredientCommandId == null) {
             final Set<Long> setOfIngredientsIDsAfterSaveRecipe = getSetOfIngredientsIDs(recipe);
             setOfIngredientsIDsAfterSaveRecipe.removeAll(setOfIngredientsIDsBeforeSaveRecipe);
-            ingredientCommandId = setOfIngredientsIDsAfterSaveRecipe.stream().findFirst().orElseThrow();
+            ingredientCommandId = setOfIngredientsIDsAfterSaveRecipe.stream().findFirst().orElseThrow(NotFoundException::new);
         }
 
         final Long finalIngredientCommandId = ingredientCommandId;
@@ -119,7 +120,7 @@ public class IngredientServiceImpl implements IngredientService {
         log.debug("Deleting ingredient id: {} from recipe id: {}", ingredientId, recipeId);
         final Optional<Recipe> recipeOptional = recipeRepository.findById(recipeId);
 
-        if (recipeOptional.isEmpty()) {
+        if (!recipeOptional.isPresent()) {
             log.error("<deleteById> Recipe id: {} not found.", recipeId);
             return;
         }
@@ -132,7 +133,7 @@ public class IngredientServiceImpl implements IngredientService {
                 .filter(ingredient -> ingredient.getId().equals(ingredientId))
                 .findFirst();
 
-        if (optionalIngredient.isEmpty()) {
+        if (!optionalIngredient.isPresent()) {
             log.error("<deleteById> Ingredient id: {} not found", ingredientId);
             return;
         }
