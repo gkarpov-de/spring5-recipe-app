@@ -40,9 +40,6 @@ jobs:
       # run tests! and gen code coverage
       - run: mvn integration-test
 
-      - store_test_results:
-          path: target/surefire-reports
-
       - run:
           name: Send to CodeCov
           command: bash <(curl -s https://codecov.io/bash) -t '2bc9217b-eb4a-4932-bc12-6d1c40f5b2ec'
